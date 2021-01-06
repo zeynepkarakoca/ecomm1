@@ -1,0 +1,46 @@
+<h2 style="text-align: center; margin-top: 45px; margin-bottom: 45px;">Registration</h2>
+
+<div style="display: flex; justify-content: center; align-items: center; width: 100% !important; flex-direction: column;">
+    <form style="min-width: 550px !important;" nz-form [formGroup]="registrationForm">
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="email">E-mail</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="The input is not valid E-mail!">
+                <input nz-input formControlName="email" id="email"/>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Name</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="The input is not valid Name!">
+                <input nz-input formControlName="name" id="name"/>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="surname">Surname</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="The input is not valid Surname!">
+                <input nz-input formControlName="surname" id="surname"/>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="phone">Phone</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="The input is not valid Phone!">
+                <input nz-input formControlName="phone" id="phone"/>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="password">Password</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="The input is not valid Password!">
+                <input nz-input formControlName="password" type="password" id="password"/>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="password">Confirm password</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="The input is not valid Password!">
+                <input nz-input formControlName="password_confirmation" type="password" id="password_confirmation"/>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+    <div>
+        <button nz-button nzType="danger" style="margin-right: 10px;" routerLink="/auth/login">Cancel</button>
+        <button type="submit" [nzLoading]="formLoading" (click)="handleSubmitForm()" nz-button>Register</button>
+    </div>
+</div>

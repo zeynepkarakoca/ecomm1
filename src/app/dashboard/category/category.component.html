@@ -1,0 +1,141 @@
+<h2>Categories</h2>
+
+<nz-table #categoriesTable [nzData]="TableData" [nzLoading]="tableLoading" [nzPageSize]="10">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Image</th>
+        <th>Status</th>
+        <th style="text-align: center;">
+            <button nz-button nzType="primary" (click)="handleToggleNewCategoryForm(true)">New category</button>
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let category of categoriesTable.data">
+        <td>{{category.id}}</td>
+        <td>{{category.name}}</td>
+        <td><img src="{{category.image && category.image.url}}" width="64px" alt="thumb"></td>
+        <td>
+            <nz-tag nzColor="green" *ngIf="category.status === 1">Active</nz-tag>
+            <nz-tag nzColor="red" *ngIf="category.status === 0">Deactive</nz-tag>
+        </td>
+        <td style="text-align: center;">
+            <nz-button-group>
+                <button nz-button nzType="dashed" (click)="handleToggleNewSubcategoryForm(true, category.id, category.name)">Add subcategory ({{category.sub_categories.length}})</button>
+                <button nz-button nzType="dashed" (click)="handleToggleEditCategoryForm(true, category.id)">Edit
+                </button>
+                <button nz-button nzType="danger" (click)="handleDeleteCategory(category.id)">Delete</button>
+            </nz-button-group>
+        </td>
+    </tr>
+    </tbody>
+</nz-table>
+
+<nz-modal
+        nzTitle="Edit Category"
+        [nzContent]="newCategoryFormUI"
+        [nzVisible]="NewCategoryFormDetails.visible"
+        [nzOkLoading]="NewCategoryFormDetails.isLoading"
+        (nzOnCancel)="handleToggleNewCategoryForm(false)"
+        (nzOnOk)="handleNewCategoryOk()"
+></nz-modal>
+
+<nz-modal
+        nzTitle="Edit Category"
+        [nzContent]="editCategoryFormUI"
+        [nzVisible]="EditCategoryFormDetails.visible"
+        [nzOkLoading]="EditCategoryFormDetails.isLoading"
+        (nzOnCancel)="handleToggleEditCategoryForm(false)"
+        (nzOnOk)="handleEditCategoryOk()"
+></nz-modal>
+
+<nz-modal
+        nzTitle="New subcategory"
+        [nzContent]="NewSubcategoryUI"
+        [nzVisible]="NewSubcategoryFormDetails.visible"
+        [nzOkLoading]="NewSubcategoryFormDetails.loading"
+        (nzOnCancel)="handleToggleNewSubcategoryForm(false)"
+        (nzOnOk)="handleNewSubcategoryFormOk()"
+        [nzOkDisabled]="!NewSubcategoryForm.valid"
+>
+</nz-modal>
+
+<!-- New Category Form Template -->
+<ng-template #newCategoryFormUI>
+    <form nz-form [formGroup]="NewCategoryForm">
+        <nz-input-group>
+            <nz-form-label nzRequired>Name</nz-form-label>
+            <nz-form-control nzErrorTip="Name field is not valid!">
+                <input formControlName="name" nz-input type="text" name="name">
+            </nz-form-control>
+        </nz-input-group>
+        <nz-input-group>
+            <nz-form-label nzRequired>Image</nz-form-label>
+            <nz-form-control nzErrorTip="Image field is not valid!">
+                <input nz-input (change)="NewCategoryFormDetails.onSelectedFileChange($event)" formControlName="image"
+                       type="file" name="name">
+            </nz-form-control>
+        </nz-input-group>
+
+        <div style="margin: 15px 0">
+            <label nz-checkbox formControlName="status">
+                <span>Is Active ?</span>
+            </label>
+        </div>
+    </form>
+</ng-template>
+<!-- Edit Category From Template -->
+<ng-template #editCategoryFormUI>
+    <form nz-form [formGroup]="EditCategoryForm">
+        <nz-input-group>
+            <nz-form-label nzRequired>Name</nz-form-label>
+            <nz-form-control nzErrorTip="Name field is not valid!">
+                <input formControlName="name" nz-input type="text" name="name">
+            </nz-form-control>
+        </nz-input-group>
+        <nz-input-group>
+            <nz-form-label nzRequired>Image</nz-form-label>
+            <nz-form-control nzErrorTip="Image field is not valid!">
+                <input nz-input (change)="EditCategoryFormDetails.onSelectedFileChange($event)" formControlName="image"
+                       type="file" name="name">
+            </nz-form-control>
+        </nz-input-group>
+        <div style="margin: 15px 0">
+            <label nz-checkbox formControlName="status">
+                <span>Is Active ?</span>
+            </label>
+        </div>
+    </form>
+</ng-template>
+<!-- New Subcategory Form Template -->
+<ng-template #NewSubcategoryUI>
+    <form [formGroup]="NewSubcategoryForm" nz-form>
+        <input type="hidden" name="category_id" formControlName="category_id">
+        <nz-input-group>
+            <nz-form-label nzRequired>Category Name</nz-form-label>
+            <nz-form-control nzErrorTip="Name field is not valid!">
+                <input nz-input type="text" name="name" [value]="NewSubcategoryFormDetails.selectedCategoryName"
+                       [readOnly]="true">
+            </nz-form-control>
+        </nz-input-group>
+        <nz-input-group>
+            <nz-form-label nzRequired>Name</nz-form-label>
+            <nz-form-control nzErrorTip="Name field is not valid!">
+                <input formControlName="name" nz-input type="text" name="name">
+            </nz-form-control>
+        </nz-input-group>
+        <nz-input-group>
+            <nz-form-label nzRequired>Description</nz-form-label>
+            <nz-form-control nzErrorTip="Description field is not valid!">
+                <textarea nz-input formControlName="description"></textarea>
+            </nz-form-control>
+        </nz-input-group>
+        <div style="margin: 15px 0">
+            <label nz-checkbox formControlName="status">
+                <span>Is Active ?</span>
+            </label>
+        </div>
+    </form>
+</ng-template>

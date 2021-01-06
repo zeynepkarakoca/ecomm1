@@ -1,0 +1,133 @@
+<h2>Subcategories</h2>
+
+<form nz-form style="width: 275px;">
+    <nz-form-item>
+        <nz-form-control>
+            <nz-form-label>Root categories</nz-form-label>
+            <nz-select [ngModelOptions]="{standalone: true}" nzAllowClear [(ngModel)]="_filters.category_id"
+                       (ngModelChange)="handleFilterChange($event)">
+                <nz-option nzLabel="All" [nzValue]="null"></nz-option>
+                <nz-option *ngFor="let data of parentCategoryList" [nzLabel]="data.name"
+                           [nzValue]="data.id"></nz-option>
+            </nz-select>
+        </nz-form-control>
+    </nz-form-item>
+</form>
+
+<nz-table #subcategoryTable [nzLoading]="tableLoading" [nzData]="TableData" [nzPageSize]="10">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Parent Category</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Status</th>
+        <th style="text-align: center">
+            <button nz-button nzType="primary" (click)="handleToggleNewSubcategoryForm(true)">New subcategory</button>
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let subcategory of subcategoryTable.data">
+        <td>{{subcategory.id}}</td>
+        <td>
+            <nz-tag nzColor="blue">{{subcategory.category_id.name}}</nz-tag>
+        </td>
+        <td>{{subcategory.name}}</td>
+        <td>{{subcategory.description}}</td>
+        <td>
+            <nz-tag nzColor="red" *ngIf="subcategory.status === 0">Deactive</nz-tag>
+            <nz-tag nzColor="green" *ngIf="subcategory.status === 1">Active</nz-tag>
+        </td>
+        <td style="text-align: center">
+            <nz-button-group>
+                <button nz-button nzType="dashed" (click)="handleToggleEditSubcategoryForm(subcategory.id, true)">Edit</button>
+                <button nz-button nzType="danger" (click)="handleDeleteSubcategory(subcategory.id)">Delete</button>
+            </nz-button-group>
+        </td>
+    </tr>
+    </tbody>
+</nz-table>
+
+<nz-modal
+        nzTitle="New subcategory"
+        [nzContent]="NewSubcategoryUI"
+        [nzVisible]="NewSubcategoryFormDetails.visible"
+        [nzOkLoading]="NewSubcategoryFormDetails.loading"
+        (nzOnCancel)="handleToggleNewSubcategoryForm(false)"
+        (nzOnOk)="handleNewSubcategoryOk()"
+>
+</nz-modal>
+
+<nz-modal
+        nzTitle="Edit subcategory"
+        [nzContent]="EditSubcategoryUI"
+        [nzVisible]="EditSubcategoryFormDetails.visible"
+        [nzOkLoading]="EditSubcategoryFormDetails.loading"
+        (nzOnCancel)="handleToggleEditSubcategoryForm(0, false)"
+        (nzOnOk)="handleEditSubcategoryOk()"
+>
+</nz-modal>
+
+<!-- New Subcategory form -->
+<ng-template #NewSubcategoryUI>
+    <form nz-form [formGroup]="NewSubcategoryForm">
+        <nz-form-item>
+            <nz-form-control nzErrorTip="Parent category is required!">
+                <nz-form-label nzRequired>Parent category</nz-form-label>
+                <nz-select formControlName="category_id" nzAllowClear>
+                    <nz-option *ngFor="let category of parentCategoryList" [nzValue]="category.id"
+                               [nzLabel]="category.name"></nz-option>
+                </nz-select>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-control nzErrorTip="Name filed is not valid!">
+                <nz-form-label nzRequired>Name</nz-form-label>
+                <input formControlName="name" nz-input type="text" name="name">
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-control nzErrorTip="Description filed is not valid!">
+                <nz-form-label nzRequired>Description</nz-form-label>
+                <textarea formControlName="description" nz-input name="description"></textarea>
+            </nz-form-control>
+        </nz-form-item>
+        <div style="margin: 15px 0;">
+            <label formControlName="status" nz-checkbox>
+                <span>Is Active ?</span>
+            </label>
+        </div>
+    </form>
+</ng-template>
+<!-- Edit Subcategory form -->
+<ng-template #EditSubcategoryUI>
+    <form nz-form [formGroup]="EditSubcategoryForm">
+        <nz-form-item>
+            <nz-form-control nzErrorTip="Parent category is required!">
+                <nz-form-label nzRequired>Parent category</nz-form-label>
+                <nz-select formControlName="category_id" nzAllowClear>
+                    <nz-option *ngFor="let category of parentCategoryList" [nzValue]="category.id"
+                               [nzLabel]="category.name"></nz-option>
+                </nz-select>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-control nzErrorTip="Name filed is not valid!">
+                <nz-form-label nzRequired>Name</nz-form-label>
+                <input formControlName="name" nz-input type="text" name="name">
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-control nzErrorTip="Description filed is not valid!">
+                <nz-form-label nzRequired>Description</nz-form-label>
+                <textarea formControlName="description" nz-input name="description"></textarea>
+            </nz-form-control>
+        </nz-form-item>
+        <div style="margin: 15px 0;">
+            <label formControlName="status" nz-checkbox>
+                <span>Is Active ?</span>
+            </label>
+        </div>
+    </form>
+</ng-template>

@@ -1,0 +1,211 @@
+<h2>Products</h2>
+
+<nz-table [nzData]="TableData" [nzLoading]="tableLoading" [nzPageSize]="10" #productsTable>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Category</th>
+        <th>Price</th>
+        <th>Material</th>
+        <th>Design</th>
+        <th>Gender</th>
+        <th>Images</th>
+        <th style="text-align: center">
+            <button nz-button nzType="primary" (click)="handleToggleNewProductForm(true)">New product</button>
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let product of productsTable.data">
+        <td>{{product.id}}</td>
+        <td>{{product.name}}</td>
+        <td>{{product.description}}</td>
+        <td>{{product.sub_category_id.name}}</td>
+        <td>{{product.price}}<b>TL</b></td>
+        <td>{{product.material}}</td>
+        <td>{{product.design}}</td>
+        <td>{{product.gender == '1' ? 'Male' : product.gender == '2' ? 'Female' : 'Unisex'}}</td>
+        <td>
+            <img *ngFor="let image of product.images"
+                    [src]="image.url" style="margin-left: 5px;" alt="" width="64px">
+        </td>
+        <td style="text-align: center;">
+            <nz-button-group>
+                <button nz-button nzType="dashed" (click)="handleToggleEditProductForm(true,product.id)">Edit</button>
+                <button nz-button nzType="danger" (click)="handleDeleteProduct(product.id)">Delete</button>
+            </nz-button-group>
+        </td>
+    </tr>
+    </tbody>
+</nz-table>
+
+<nz-modal
+        nzTitle="New product"
+        [nzContent]="newProductFormUI"
+        [nzVisible]="newProductFormDetails.visible"
+        [nzOkLoading]="newProductFormDetails.loading"
+        [nzOkDisabled]="!newProductForm.valid"
+        (nzOnOk)="handleNewProductOk()"
+        (nzOnCancel)="handleToggleNewProductForm(false)"
+>
+</nz-modal>
+
+<nz-modal
+        nzTitle="Edit product"
+        [nzContent]="editProductFormUI"
+        [nzVisible]="editProductFormDetails.visible"
+        [nzOkLoading]="editProductFormDetails.loading"
+        [nzOkDisabled]="!editProductForm.valid"
+        (nzOnOk)="handleEditProductOk()"
+        (nzOnCancel)="handleToggleEditProductForm(false)"
+>
+</nz-modal>
+<!-- New product form Template -->
+<ng-template #newProductFormUI>
+    <form nz-form [formGroup]="newProductForm">
+        <nz-form-item>
+            <nz-form-control nzErrorTip="Category filed is not valid!">
+                <nz-form-label nzRequired>Category</nz-form-label>
+                <nz-select formControlName="sub_category_id">
+                    <nz-option *ngFor="let item of SubcategoriesList"
+                               [nzLabel]="item.name"
+                               [nzValue]="item.id"></nz-option>
+                </nz-select>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-control nzErrorTip="Name field is not valid!">
+                <nz-form-label nzRequired>Name</nz-form-label>
+                <input formControlName="name" nz-input type="text">
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-control nzErrorTip="Slug field is not valid!">
+                <nz-form-label nzRequired>Slug</nz-form-label>
+                <input formControlName="slug" nz-input type="text">
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-control nzErrorTip="Description field is not valid!">
+                <nz-form-label nzRequired>Description</nz-form-label>
+                <textarea formControlName="description" nz-input type="text"></textarea>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-control nzErrorTip="Material field is not valid!">
+                <nz-form-label nzRequired>Material</nz-form-label>
+                <input formControlName="material" nz-input type="text">
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-control nzErrorTip="Design field is not valid!">
+                <nz-form-label nzRequired>Design</nz-form-label>
+                <input formControlName="design" nz-input type="text">
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-control nzErrorTip="Price field is not valid!">
+                <nz-form-label nzRequired>Price</nz-form-label>
+                <input formControlName="price" nz-input type="number">
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-control nzErrorTip="Gender field is not valid!">
+                <nz-form-label nzRequired>Gender</nz-form-label>
+                <nz-select formControlName="gender">
+                    <nz-option nzLabel="Male" [nzValue]="1"></nz-option>
+                    <nz-option nzLabel="Female" [nzValue]="2"></nz-option>
+                    <nz-option nzLabel="Unisex" [nzValue]="3"></nz-option>
+                </nz-select>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-control nzErrorTip="Images field is not valid!">
+                <nz-form-label nzRequired>Images</nz-form-label>
+                <input formControlName="image1" (change)="onSelectedImageChange($event, 1)" nz-input type="file">
+                <input formControlName="image2" (change)="onSelectedImageChange($event, 2)" nz-input type="file">
+            </nz-form-control>
+        </nz-form-item>
+        <div style="margin: 15px 0;">
+            <label formControlName="status" nz-checkbox>
+                <span>Is Active ?</span>
+            </label>
+        </div>
+    </form>
+</ng-template>
+<!-- Edit product form Template -->
+<ng-template #editProductFormUI>
+    <form nz-form [formGroup]="editProductForm">
+        <nz-form-item>
+            <nz-form-control nzErrorTip="Category filed is not valid!">
+                <nz-form-label nzRequired>Category</nz-form-label>
+                <nz-select formControlName="sub_category_id">
+                    <nz-option *ngFor="let item of SubcategoriesList"
+                               [nzLabel]="item.name"
+                               [nzValue]="item.id"></nz-option>
+                </nz-select>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-control nzErrorTip="Name field is not valid!">
+                <nz-form-label nzRequired>Name</nz-form-label>
+                <input formControlName="name" nz-input type="text">
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-control nzErrorTip="Slug field is not valid!">
+                <nz-form-label nzRequired>Slug</nz-form-label>
+                <input formControlName="slug" nz-input type="text">
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-control nzErrorTip="Description field is not valid!">
+                <nz-form-label nzRequired>Description</nz-form-label>
+                <textarea formControlName="description" nz-input type="text"></textarea>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-control nzErrorTip="Material field is not valid!">
+                <nz-form-label nzRequired>Material</nz-form-label>
+                <input formControlName="material" nz-input type="text">
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-control nzErrorTip="Design field is not valid!">
+                <nz-form-label nzRequired>Design</nz-form-label>
+                <input formControlName="design" nz-input type="text">
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-control nzErrorTip="Price field is not valid!">
+                <nz-form-label nzRequired>Price</nz-form-label>
+                <input formControlName="price" nz-input type="number">
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-control nzErrorTip="Gender field is not valid!">
+                <nz-form-label nzRequired>Gender</nz-form-label>
+                <nz-select formControlName="gender">
+                    <nz-option nzLabel="Male" [nzValue]="1"></nz-option>
+                    <nz-option nzLabel="Female" [nzValue]="2"></nz-option>
+                    <nz-option nzLabel="Unisex" [nzValue]="3"></nz-option>
+                </nz-select>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-control nzErrorTip="Images field is not valid!">
+                <nz-form-label nzRequired>Images</nz-form-label>
+                <input formControlName="image1" (change)="onSelectedImageChange($event, 'b1')" nz-input type="file">
+                <input formControlName="image2" (change)="onSelectedImageChange($event, 'b2')" nz-input type="file">
+            </nz-form-control>
+        </nz-form-item>
+        <div style="margin: 15px 0;">
+            <label formControlName="status" nz-checkbox>
+                <span>Is Active ?</span>
+            </label>
+        </div>
+    </form>
+</ng-template>
+

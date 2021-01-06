@@ -1,0 +1,58 @@
+<nz-layout style="height: 100%;">
+    <nz-layout style="height: 100% !important">
+        <nz-sider nzWidth="270px" nzTheme="light">
+            <nz-header style="text-align: center;"><h2 style=" color: #fff !important;">E-Commerce</h2></nz-header>
+            <ul style="height: 100% !important;" nz-menu nzTheme="dark" nzMode="inline" class="sider-menu">
+                <li nz-menu-item routerLink="/dashboard/main/shops" [nzMatchRouter]="'/dashboard/main/shops'">Shops</li>
+                <li nz-submenu nzTitle="Stock Details" nzOpen>
+                    <ul>
+                        <li nz-menu-item prefix="BgColors" routerLink="/dashboard/main/color"
+                            [nzMatchRouter]="'/dashboard/main/color'">
+                            Colors
+                        </li>
+                        <li nz-menu-item routerLink="/dashboard/main/category"
+                            [nzMatchRouter]="'/dashboard/main/category'">Categories
+                        </li>
+                        <li nz-menu-item routerLink="/dashboard/main/subcategory"
+                            [nzMatchRouter]="'/dashboard/main/subcategory'">Subcategories
+                        </li>
+                    </ul>
+                </li>
+                <li nz-submenu nzTitle="Stock" nzOpen>
+                    <ul>
+                        <li nz-menu-item routerLink="/dashboard/main/products"
+                            [nzMatchRouter]="'/dashboard/main/products'">Products
+                        </li>
+                        <li nz-menu-item routerLink="/dashboard/main/stocks" [nzMatchRouter]="'/dashboard/main/stocks'">
+                            Stocks
+                        </li>
+                    </ul>
+                </li>
+                <li nz-submenu nzTitle="Setting" nzOpen>
+                    <ul>
+                        <li nz-menu-item routerLink="/dashboard/main/faq" [nzMatchRouter]="'/dashboard/main/faq'">FAQ</li>
+                    </ul>
+                </li>
+                <li nz-submenu nzTitle="Other" nzOpen>
+                    <ul>
+                        <li nzDanger nz-menu-item routerLink="/home">Client View</li>
+                        <li nzDanger nz-menu-item (click)="handleLogout()">Log out</li>
+                    </ul>
+                </li>
+            </ul>
+        </nz-sider>
+        <nz-layout class="inner-layout" style="height: 100% !important;padding: 15px;">
+            <nz-breadcrumb style="padding: 10px;" [nzSeparator]="'/'" [nzAutoGenerate]="true">
+                <nz-breadcrumb-item>
+                    Dashboard
+                </nz-breadcrumb-item>
+                <nz-breadcrumb-item>
+                    Main
+                </nz-breadcrumb-item>
+            </nz-breadcrumb>
+            <nz-content style="padding: 10px;">
+                <router-outlet></router-outlet>
+            </nz-content>
+        </nz-layout>
+    </nz-layout>
+</nz-layout>

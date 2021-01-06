@@ -1,0 +1,112 @@
+<h2>Colors</h2>
+
+<nz-table #colorsTable
+          [nzData]="TableData"
+          [nzLoading]="tableLoading"
+          [nzPageSize]="10"
+>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Status</th>
+        <th>Hex Code</th>
+        <th>Slug</th>
+        <th style="text-align: center;">
+            <button nz-button nzType="primary" (click)="handleToggleNewColorForm(true)">New color</button>
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let color of colorsTable.data">
+        <td>{{color.id}}</td>
+        <td>{{color.name}}</td>
+        <td>
+            <nz-tag nzColor="green" *ngIf="color.status == 1">Active</nz-tag>
+            <nz-tag nzColor="red" *ngIf="color.status == 0">Deactive</nz-tag>
+        </td>
+        <td>{{color.hex_code}}</td>
+        <td>{{color.slug}}</td>
+        <td style="text-align: center;">
+            <nz-button-group>
+                <button nz-button nzType="dashed" (click)="handleToggleEditColorForm(true, color.id)">Edit</button>
+                <button nz-button nzType="danger" (click)="handleDeleteColor(color.id)">Delete</button>
+            </nz-button-group>
+        </td>
+    </tr>
+    </tbody>
+</nz-table>
+
+<nz-modal nzTitle="Add new color" [nzContent]="newColorFormUI"
+          [nzVisible]="newColorFormDetails.visible"
+          (nzOnCancel)="handleToggleNewColorForm(false)"
+          (nzOnOk)="handleNewColorFormOk()"
+          [nzOkDisabled]="!newColorForm.valid"
+          [nzOkLoading]="newColorFormDetails.loading"
+>
+</nz-modal>
+<nz-modal nzTitle="Edit color" [nzContent]="editColorFormUI"
+          [nzVisible]="editColorFormDetails.visible"
+          (nzOnCancel)="handleToggleEditColorForm(false)"
+          (nzOnOk)="handleEditColorFormOk()"
+          [nzOkDisabled]="!editColorForm.valid"
+          [nzOkLoading]="editColorFormDetails.loading"
+>
+</nz-modal>
+
+<!-- New color form template -->
+<ng-template #newColorFormUI>
+    <form nz-form [formGroup]="newColorForm">
+        <nz-input-group>
+            <nz-form-label nzRequired nzFor="name">Name</nz-form-label>
+            <nz-form-control nzErrorTip="Name field is not valid!">
+                <input formControlName="name" nz-input type="text" id="name" placeholder="E.g Purple">
+            </nz-form-control>
+        </nz-input-group>
+        <nz-input-group>
+            <nz-form-label nzRequired>Hex Color</nz-form-label>
+            <nz-form-control nzErrorTip="Hex Color filed is not valid!">
+                <input formControlName="hex_code" nz-input type="text" id="hex_code" placeholder="E.g #00065689">
+            </nz-form-control>
+        </nz-input-group>
+        <nz-input-group>
+            <nz-form-label nzRequired>Slug</nz-form-label>
+            <nz-form-control nzErrorTip="Slug filed is not valid!">
+                <input formControlName="slug" nz-input type="text" id="slug" placeholder="E.g purple_slug">
+            </nz-form-control>
+        </nz-input-group>
+        <div style="margin: 15px 0">
+            <label nz-checkbox formControlName="status">
+                <span>Is Active ?</span>
+            </label>
+        </div>
+    </form>
+</ng-template>
+<!-- Edit color form template -->
+<ng-template #editColorFormUI>
+    <form nz-form [formGroup]="editColorForm">
+        <nz-input-group>
+            <nz-form-label nzRequired nzFor="name">Name</nz-form-label>
+            <nz-form-control nzErrorTip="Name field is not valid!">
+                <input formControlName="name" nz-input type="text" id="name" placeholder="E.g Purple">
+            </nz-form-control>
+        </nz-input-group>
+        <nz-input-group>
+            <nz-form-label nzRequired>Hex Color</nz-form-label>
+            <nz-form-control nzErrorTip="Hex Color filed is not valid!">
+                <input formControlName="hex_code" nz-input type="text" id="hex_code" placeholder="E.g #00065689">
+            </nz-form-control>
+        </nz-input-group>
+        <nz-input-group>
+            <nz-form-label nzRequired>Slug</nz-form-label>
+            <nz-form-control nzErrorTip="Slug filed is not valid!">
+                <input formControlName="slug" nz-input type="text" id="slug" placeholder="E.g purple_slug">
+            </nz-form-control>
+        </nz-input-group>
+        <div style="margin: 15px 0">
+            <label nz-checkbox formControlName="status">
+                <span>Is Active ?</span>
+            </label>
+        </div>
+    </form>
+</ng-template>
