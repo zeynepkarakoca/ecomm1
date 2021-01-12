@@ -12,12 +12,13 @@ import { HomeComponent } from './client/home/home.component';
 import { FaqComponent } from './dashboard/faq/faq.component';
 import { ShopsComponent } from './dashboard/shops/shops.component';
 import { ProductViewComponent } from './client/product-view/product-view.component';
+import { ProductGridComponent } from './client/product-grid/product-grid.component';
 
 
 const routes: Routes = [
-  { path: '*', redirectTo: 'home' },
   { path: 'home', component: HomeComponent },
   { path: 'product/:id', component: ProductViewComponent },
+  { path: 'products', component: ProductGridComponent },
   {
     path: 'auth', children: [
       { path: 'login', component: LoginComponent },
@@ -38,7 +39,8 @@ const routes: Routes = [
         ]
       },
     ]
-  }
+  },
+  { path: '**', redirectTo: 'home', pathMatch: 'full' },
 ];
 
 @NgModule({

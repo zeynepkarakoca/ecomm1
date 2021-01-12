@@ -760,6 +760,10 @@ Version:1.0
   display: inline-block;
   background: #fff;
   position: relative;
+
+  input {
+    width: 450px !important;
+  }
 }
 
 .header.shop .search-bar {

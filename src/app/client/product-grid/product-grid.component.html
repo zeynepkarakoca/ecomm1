@@ -1,4 +1,4 @@
-	<div *ngIf="!TopStocks || !Products || !Categories || SingleProductLoading" class="preloader">
+	<div *ngIf="!Categories || !allStocks" class="preloader">
 		<div class="preloader-inner">
 			<div class="preloader-icon">
 				<span></span>
@@ -95,14 +95,14 @@
 						<div class="col-lg-3">
 							<div class="all-category">
 								<h3 class="cat-heading"><i class="fa fa-bars" aria-hidden="true"></i>CATEGORIES</h3>
-								<ul class="main-category">
+								<!-- <ul class="main-category">
                     <li *ngFor="let c of Categories">
                       <a href="#"> {{c.name}} <i class="fa fa-angle-right" aria-hidden="true"></i></a>
                       <ul *ngIf="c.sub_categories" class="sub-category">
                         <li *ngFor="let i of c.sub_categories"><a href="#">{{i.name}}</a></li>
                       </ul>
                     </li>
-								</ul>
+								</ul> -->
 							</div>
 						</div>
 						<div class="col-lg-9 col-12">
@@ -112,8 +112,8 @@
 									<div class="navbar-collapse">
 										<div class="nav-inner">
 											<ul class="nav main-menu menu navbar-nav">
-													<li class="active"><a href="#">Home</a></li>
-													<li><a href="/products">Products</a></li>
+													<li ><a href="/home">Home</a></li>
+													<li class="active"><a href="/products">Products</a></li>
 												</ul>
 										</div>
 									</div>
@@ -129,62 +129,60 @@
 	</header>
 	<!--/ End Header -->
 
-	<!-- Slider Area -->
-	<section class="hero-slider">
-		<!-- Single Slider -->
-		<div class="single-slider" style="background: url(./assets/images/slider-image2.jpg)">
+		<!-- Product Style -->
+		<section class="product-area shop-sidebar shop section">
 			<div class="container">
-				<div class="row no-gutters">
-					<div class="col-lg-9 offset-lg-3 col-12">
-						<div class="text-inner">
-							<div class="row">
-								<div class="col-lg-7 col-12">
-									<div class="hero-text">
-										<h1><span>UP TO 50% OFF </span>EXPLORE PRODUCTS</h1>
-										<div class="button">
-											<a href="#" class="btn">Shop Now!</a>
+				<div class="row">
+					<div class="col-lg-3 col-md-4 col-12">
+						<div class="shop-sidebar">
+								<!-- Single Widget -->
+								<div class="single-widget category">
+									<h3 class="title">Categories</h3>
+									<ul *ngFor="let category of Categories" class="category-list">
+                    <b>{{category.name}}</b>
+										<li *ngFor="let subcategory of category.sub_categories"><a [style.color]='selectedCategory == subcategory.id ? "red" : "black" ' (click)="getAllStocks(subcategory.id)">{{subcategory.name}}</a></li>
+									</ul>
+								</div>
+								<!--/ End Single Widget -->
+								<!-- Single Widget -->
+								<div class="single-widget recent-post" *ngIf="TopStocks">
+									<h3 class="title">Recent post</h3>
+									<!-- Single Post -->
+									<div *ngFor="let item of TopStocks[0]" class="single-post first">
+										<div class="image">
+											<img style="object-fit: contain;" [src]="item.product_id.images[0].url" alt="#">
+										</div>
+										<div class="content">
+											<h5><a href="#">{{item.product_id.name}}</a></h5>
+											<p class="price">{{item.product_id.price}}TL</p>
+											<ul class="reviews">
+												<li class="yellow"><i class="ti-star"></i></li>
+												<li class="yellow"><i class="ti-star"></i></li>
+												<li class="yellow"><i class="ti-star"></i></li>
+												<li><i class="ti-star"></i></li>
+												<li><i class="ti-star"></i></li>
+											</ul>
 										</div>
 									</div>
+									<!-- End Single Post -->
 								</div>
-							</div>
+								<!--/ End Single Widget -->
 						</div>
 					</div>
-				</div>
-			</div>
-		</div>
-		<!--/ End Single Slider -->
-	</section>
-	<!--/ End Slider Area -->
-
-	<!-- Start Product Area -->
-  <div class="product-area section">
-          <div class="container">
-      <div class="row">
-        <div class="col-12">
-          <div class="section-title">
-            <h2>Trending Items</h2>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-12">
-          <div class="product-info">
-            <div class="nav-main">
-              <!-- Tab Nav -->
-              <ul class="nav nav-tabs" id="myTab" role="tablist">
-                <li class="nav-item"><a class="nav-link active" data-toggle="tab" (click)="getProductsByGender(-1)" role="tab">All</a></li>
-                <li class="nav-item"><a class="nav-link " data-toggle="tab" (click)="getProductsByGender(1)" role="tab">Man</a></li>
-                <li class="nav-item"><a class="nav-link" data-toggle="tab" (click)="getProductsByGender(0)" role="tab">Woman</a></li>
-              </ul>
-              <!--/ End Tab Nav -->
-            </div>
-            <div class="tab-content" id="myTabContent">
-              <!-- Start Single Tab -->
-              <div class="tab-pane fade show active" id="man" role="tabpanel">
-                <div class="tab-single">
-                  <div class="row">
-
-                    <div *ngFor="let product of DisplayProducts" class="col-xl-3 col-lg-4 col-md-4 col-12">
+					<div class="col-lg-9 col-md-8 col-12">
+						<div class="row">
+							<div class="col-12">
+								<!-- Shop Top -->
+								<div class="shop-top">
+									<ul class="view-mode">
+										<li class="active"><a href="/products"><i class="fa fa-th-large"></i></a></li>
+									</ul>
+								</div>
+								<!--/ End Shop Top -->
+							</div>
+						</div>
+						<div class="row">
+              <div *ngFor="let product of allStocks" class="col-lg-4 col-md-6 col-12">
                       <div class="single-product">
                         <div class="product-img">
                           <a data-toggle="modal"  (click)="setModalProduct(product.id)" data-target="#exampleModal">
@@ -210,112 +208,37 @@
                         </div>
                       </div>
                     </div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<!--/ End Product Style 1  -->
 
-                    </div>
-                </div>
-              </div>
-              <!--/ End Single Tab -->
-            </div>
-          </div>
-        </div>
-      </div>
-          </div>
-  </div>
-	<!-- End Product Area -->
-
-
-	<!-- Start Shop Home List  -->
-	<section class="shop-home-list section">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-4 col-md-6 col-12">
+		<!-- Start Shop Newsletter  -->
+		<section class="shop-newsletter section">
+			<div class="container">
+				<div class="inner-top">
 					<div class="row">
-						<div class="col-12">
-							<div class="shop-section-title">
-								<h1>On sale</h1>
+						<div class="col-lg-8 offset-lg-2 col-12">
+							<!-- Start Newsletter Inner -->
+							<div class="inner">
+								<h4>Newsletter</h4>
+								<p> Subscribe to our newsletter and get <span>10%</span> off your first purchase</p>
+								<form action="mail/mail.php" method="get" target="_blank" class="newsletter-inner">
+									<input name="EMAIL" placeholder="Your email address" required="" type="email">
+									<button class="btn">Subscribe</button>
+								</form>
 							</div>
+							<!-- End Newsletter Inner -->
 						</div>
 					</div>
-					<!-- Start Single List  -->
-					<div class="single-list" *ngFor="let item of TopStocks[2]">
-						<div class="row">
-							<div class="col-lg-6 col-md-6 col-12">
-								<div class="list-image overlay">
-									<img [src]="item.product_id.images[0].url" alt="#">
-									<a (click)="setModalProduct(item.id)" data-toggle="modal" data-target="#exampleModal" class="buy"><i class="fa fa-shopping-bag"></i></a>
-								</div>
-							</div>
-							<div class="col-lg-6 col-md-6 col-12 no-padding">
-								<div class="content">
-									<h4 class="title"><a href="#">{{item.product_id.name}}</a></h4>
-									<p class="price with-discount">{{item.product_id.price}}TL</p>
-								</div>
-							</div>
-						</div>
-					</div>
-					<!-- End Single List  -->
-        </div>
-<div class="col-lg-4 col-md-6 col-12">
-					<div class="row">
-						<div class="col-12">
-							<div class="shop-section-title">
-								<h1>Trending</h1>
-							</div>
-						</div>
-					</div>
-					<!-- Start Single List  -->
-					<div class="single-list" *ngFor="let item of TopStocks[0]">
-						<div class="row">
-							<div class="col-lg-6 col-md-6 col-12">
-								<div class="list-image overlay">
-									<img [src]="item.product_id.images[0].url" alt="#">
-									<a  (click)="setModalProduct(item.id)" data-toggle="modal" data-target="#exampleModal" class="buy"><i class="fa fa-shopping-bag"></i></a>
-								</div>
-							</div>
-							<div class="col-lg-6 col-md-6 col-12 no-padding">
-								<div class="content">
-									<h4 class="title"><a href="#">{{item.product_id.name}}</a></h4>
-									<p class="price with-discount">{{item.product_id.price}}TL</p>
-								</div>
-							</div>
-						</div>
-					</div>
-					<!-- End Single List  -->
-        </div>
-<div class="col-lg-4 col-md-6 col-12">
-					<div class="row">
-						<div class="col-12">
-							<div class="shop-section-title">
-								<h1>Best seller</h1>
-							</div>
-						</div>
-					</div>
-					<!-- Start Single List  -->
-					<div class="single-list" *ngFor="let item of TopStocks[1]">
-						<div class="row">
-							<div class="col-lg-6 col-md-6 col-12">
-								<div class="list-image overlay">
-									<img   [src]="item.product_id.images[0].url" alt="#">
-									<a (click)="setModalProduct(item.id)" data-toggle="modal" data-target="#exampleModal" class="buy"><i class="fa fa-shopping-bag"></i></a>
-								</div>
-							</div>
-							<div class="col-lg-6 col-md-6 col-12 no-padding">
-								<div class="content">
-									<h4 class="title"><a href="#">{{item.product_id.name}}</a></h4>
-									<p class="price with-discount">{{item.product_id.price}}TL</p>
-								</div>
-							</div>
-						</div>
-					</div>
-					<!-- End Single List  -->
-        </div>
-      </div>
-    </div>
-	</section>
-	<!-- End Shop Home List  -->
+				</div>
+			</div>
+		</section>
+		<!-- End Shop Newsletter -->
 
 
-  <!-- RecentlyEdited1 -->
 	<!-- Modal -->
     <div *ngIf="LastSelectedProduct" class="modal fade" id="exampleModal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
@@ -394,6 +317,9 @@
             </div>
     </div>
     <!-- Modal end -->
+
+
+
 
 	<!-- Start Footer Area -->
 	<footer class="footer">

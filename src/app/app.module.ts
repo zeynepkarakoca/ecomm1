@@ -39,6 +39,7 @@ import { HomeComponent } from './client/home/home.component';
 import { ProductViewComponent } from './client/product-view/product-view.component';
 import { FaqComponent } from './dashboard/faq/faq.component';
 import { ShopsComponent } from './dashboard/shops/shops.component';
+import { ProductGridComponent } from './client/product-grid/product-grid.component';
 
 
 registerLocaleData(en);
@@ -58,7 +59,8 @@ registerLocaleData(en);
     HomeComponent,
     ProductViewComponent,
     FaqComponent,
-    ShopsComponent
+    ShopsComponent,
+    ProductGridComponent
   ],
     imports: [
         BrowserModule,

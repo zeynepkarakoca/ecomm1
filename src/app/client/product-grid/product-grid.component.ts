@@ -1,53 +1,29 @@
 import { Component, OnInit } from '@angular/core';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { ApiService } from '../../services/api.service';
+import { ApiService } from 'src/app/services/api.service';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  selector: 'app-product-grid',
+  templateUrl: './product-grid.component.html',
+  styleUrls: ['./product-grid.component.scss']
 })
-export class HomeComponent implements OnInit {
-
-  DisplayProducts: any[];
-  Products: any[];
-  Categories: any[];
-
-  TopStocks: any[];
+export class ProductGridComponent implements OnInit {
 
   CartItems: any[];
   CartTotalPrice = 0;
 
-  SingleProductLoading: boolean = false;
+  Categories = [];
+
+  constructor(private api: ApiService, private message: NzMessageService) { }
 
   LastSelectedProduct: any;
   ModalProductOrderDetails: any;
 
+  allStocks: any;
 
-  constructor(private api: ApiService, private message: NzMessageService) {
-  }
+  TopStocks: any;
 
-  getCategories = () => {
-    this.api.GetCategories().then((res: any) => this.Categories = res.data)
-  }
-
-  getProducts = () => {
-    this.api.GetTrendingStocks()
-      .then((res: any) => {
-        this.DisplayProducts = res.data;
-        this.Products = res.data;
-      });
-  };
-
-  getProductsByGender = (gender = 1) => {
-    this.DisplayProducts = this.Products;
-    if (gender == -1) return;
-    this.DisplayProducts = this.DisplayProducts.filter(x => x.product_id.gender == gender);
-  }
-
-  getTopStocks = () => {
-    this.api.GetTopStocks().then((res: any) => this.TopStocks = res.data);
-  }
+  selectedCategory = 0;
 
   addToCart = (stock, amount = 1) => {
     let cart: any[] = localStorage.getItem('cart') ? JSON.parse(localStorage.getItem('cart')) : [];
@@ -81,6 +57,10 @@ export class HomeComponent implements OnInit {
     this.CartItems = cart;
   }
 
+  getCategories = () => {
+    this.api.GetCategories().then((res: any) => this.Categories = res.data);
+  }
+
   setModalProduct = (id) => {
     this.api.GetStockById(id)
       .then((res: any) => {
@@ -106,12 +86,22 @@ export class HomeComponent implements OnInit {
     this.ModalProductOrderDetails = null;
   };
 
-  ngOnInit(): void {
-    this.getProducts();
-    this.getCategories();
-    this.getTopStocks();
-    this.getCartItems();
-    history.pushState(null, 'Home', window.location.toString());
+  getAllStocks = (category?) => {
+    this.allStocks = null;
+    this.selectedCategory = category ? category : 0;
+    this.api.GetStocks(category).then((res: any) => {
+      this.allStocks = res.data;
+    });
   }
 
+  getTopStocks = () => {
+    this.api.GetTopStocks().then((res: any) => this.TopStocks = res.data);
+  }
+
+  ngOnInit(): void {
+    this.getAllStocks();
+    this.getCategories();
+    this.getCartItems();
+    this.getTopStocks();
+  }
 }

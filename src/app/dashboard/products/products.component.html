@@ -28,8 +28,10 @@
         <td>{{product.design}}</td>
         <td>{{product.gender == '1' ? 'Male' : product.gender == '2' ? 'Female' : 'Unisex'}}</td>
         <td>
-            <img *ngFor="let image of product.images"
-                    [src]="image.url" style="margin-left: 5px;" alt="" width="64px">
+            <div  class="prod-image" *ngFor="let image of product.images" (click)="handleDeleteProductImage(image.id)">
+              <img
+                    [src]="image.url" style="margin-left: 5px;" alt="" width="64px" height="64px">
+            </div>
         </td>
         <td style="text-align: center;">
             <nz-button-group>
